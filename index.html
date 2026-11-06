@@ -8,7 +8,10 @@
 </head>
 <body>
 
-    <!-- PANTALLA DE CONFIGURACIÓN: PARA EL CREADOR (GENERA EL LINK) -->
+    <!-- REPRODUCTOR DE AUDIO DINÁMICO -->
+    <audio id="musica-fondo" loop></audio>
+
+    <!-- PANTALLA DE CONFIGURACIÓN -->
     <div id="pantalla-config" class="pantalla">
         <div class="tarjeta-formulario">
             <h2>Configurar Regalo Eterno</h2>
@@ -39,18 +42,18 @@
         </div>
     </div>
 
-    <!-- PANTALLA 1: EL JUEGO DEL ARCO Y LA FLECHA ORIGINAL -->
+    <!-- PANTALLA 1: EL JUEGO DEL ARCO Y LA FLECHA HORIZONTAL (CORREGIDO) -->
     <div id="pantalla-juego" class="pantalla oculto">
         <p class="instruccion">a little something, for you</p>
         
-        <div class="contenedor-objetivo">
+        <div class="contenedor-objetivo-horizontal">
             <div id="corazon-objetivo" class="corazon-flotante"></div>
         </div>
 
-        <div id="contenedor-arco">
+        <div id="contenedor-arco-horizontal">
             <svg id="arco-svg" viewBox="0 0 100 100">
-                <path d="M 10,20 Q 90,50 10,80" fill="none" stroke="#4a3b32" stroke-width="3"/>
-                <path id="cuerda-dinamica" d="M 10,20 L 10,50 L 10,80" fill="none" stroke="#4a3b32" stroke-width="1.5"/>
+                <path d="M 20,10 Q 50,90 80,10" fill="none" stroke="#4a3b32" stroke-width="3"/>
+                <path id="cuerda-dinamica" d="M 20,10 L 50,10 L 80,10" fill="none" stroke="#4a3b32" stroke-width="1.5"/>
             </svg>
             <div id="flecha"></div>
         </div>
@@ -59,10 +62,10 @@
     </div>
 
     <!-- PANTALLA 2: PANTALLA IMPACTO ROJA/AZUL EXCLUSIVA -->
-    <div id="pantalla-titulo-grande" class="pantalla-impacto-color oculto">
-        <div class="bloque-color-impacto">
+    <div id="pantalla-titulo-grande" class="pantalla-roja oculto">
+        <div class="bloque-rojo-impacto">
             <span class="subtitulo-blanco">make a wish...</span>
-            <h1 class="texto-gigante">Happy Birthday <span class="nombre-gigante"></span></h1>
+            <h1 class="texto-gigante" id="animacion-palabras"></h1>
         </div>
     </div>
 
@@ -71,7 +74,7 @@
         <div id="contenedor-confeti"></div>
 
         <div class="encabezado-cumple">
-            <h2 id="titulo-cumple-mini">Happy Birthday <span id="nombre-amigo-mini"></span></h2>
+            <h2 id="titulo-cumple-mini"></h2>
         </div>
 
         <div class="contenido-sorpresa">
