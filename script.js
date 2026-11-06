@@ -3,17 +3,17 @@ let TU_NOMBRE = "";
 let TEXTO_PERSONALIZADO = "";
 let GENERO_ELEGIDO = "mujer";
 
-// Elementos DOM
 const pantallaConfig = document.getElementById('pantalla-config');
 const pantallaJuego = document.getElementById('pantalla-juego');
 const pantallaTituloGrande = document.getElementById('pantalla-titulo-grande');
 const pantallaResultado = document.getElementById('pantalla-resultado');
 const flecha = document.getElementById('flecha');
-const contenedorArco = document.getElementById('contenedor-arco');
+const contenedorArco = document.getElementById('contenedor-arco-horizontal');
 const cuerdaDinamica = document.getElementById('cuerda-dinamica');
 const corazonObjetivo = document.getElementById('corazon-objetivo');
 const elementoTexto = document.getElementById('texto-dedicatoria');
 const elementoFirma = document.getElementById('firma-att');
+const audioTrack = document.getElementById('musica-fondo');
 
 let arrastrando = false;
 let startY = 0;
@@ -29,7 +29,6 @@ const coloresConfeti = {
     "hombre": ['#3a86c8', '#4cc9f0', '#4895ef', '#72efdd']
 };
 
-// DETECTA SI LA PERSONA YA ABRIÓ EL ENLACE COMPARTIDO
 window.onload = function() {
     const parametros = new URLSearchParams(window.location.search);
     const para = parametros.get('para');
@@ -47,13 +46,11 @@ window.onload = function() {
         GENERO_ELEGIDO = gen ? gen : "mujer";
 
         document.body.className = `tema-${GENERO_ELEGIDO}`;
-
         prepararTextosGenerales();
         cargarControladoresArco();
     }
 };
 
-// CREACIÓN DEL ENLACE COMPARTIBLE
 function crearEnlaceCompartir() {
     const para = encodeURIComponent(document.getElementById('input-destino').value.trim());
     const de = encodeURIComponent(document.getElementById('input-remitente').value.trim());
@@ -67,10 +64,8 @@ function crearEnlaceCompartir() {
     }
 
     const urlBase = window.location.href.split('?');
-    let urlResultado = `${urlBase[0]}?para=${para}&de=${de}&gen=${gen}`;
-    if (msg) {
-        urlResultado += `&msg=${msg}`;
-    }
+    let urlResultado = `${urlBase}?para=${para}&de=${de}&gen=${gen}`;
+    if (msg) { urlResultado += `&msg=${msg}`; }
 
     const inputLink = document.getElementById('input-enlace-resultado');
     inputLink.value = urlResultado;
@@ -79,18 +74,15 @@ function crearEnlaceCompartir() {
 
 function prepararTextosGenerales() {
     textoAtt = `Att: ${TU_NOMBRE}`;
-    
     if (TEXTO_PERSONALIZADO) {
         textoDedicatoria = TEXTO_PERSONALIZADO;
     } else {
         textoDedicatoria = `Te comparto este pequeño detalle interactivo para desearte un excelente día. Que Dios te derrame muchas bendiciones, salud y éxitos en la vida hoy y siempre.\n\nEspero que este nuevo año que empiezas llegue cargado de grandes oportunidades y aprendizajes en cada paso que des. No quería dejar pasar esta fecha especial sin enviarte un cordial saludo.\n\nQue la pases genial, que disfrutes al máximo cada momento de este día y que cada uno de tus proyectos, planes y metas se sigan cumpliendo con éxito. ¡Que vengan cosas grandiosas para ti! 🎉✨`;
     }
-
-    document.querySelector('.nombre-gigante').textContent = NOMBRE_DE_ELLA;
-    document.getElementById('nombre-amigo-mini').textContent = NOMBRE_DE_ELLA;
+    audioTrack.src = "musica.mp3";
 }
 
-// --- PASO B: MECÁNICA DE JALAR Y DISPARAR (PULL & RELEASE) ---
+// --- ARCO HORIZONTAL CON TENSIÓN REAL (CORREGIDO) ---
 function cargarControladoresArco() {
     contenedorArco.addEventListener('mousedown', (e) => {
         arrastrando = true;
@@ -103,8 +95,9 @@ function cargarControladoresArco() {
         let diffY = e.clientY - startY;
         if (diffY > 0) {
             if (diffY > LIMITE_TENSION) diffY = LIMITE_TENSION;
-            flecha.style.transform = `rotate(-90deg) translateX(${-diffY}px)`;
-            cuerdaDinamica.setAttribute('d', `M 10,20 L ${10 + diffY * 0.8},50 L 10,80`);
+            // Tensa la flecha hacia abajo de manera horizontal lógica
+            flecha.style.transform = `translateY(${diffY}px)`;
+            cuerdaDinamica.setAttribute('d', `M 20,10 L 50,${10 + diffY * 0.8} L 80,10`);
         }
     });
 
@@ -112,28 +105,50 @@ function cargarControladoresArco() {
         if (!arrastrando) return;
         arrastrando = false;
         
-        cuerdaDinamica.setAttribute('d', "M 10,20 L 10,50 L 10,80");
+        cuerdaDinamica.setAttribute('d', "M 20,10 L 50,10 L 80,10");
         flecha.style.transition = "transform 0.12s cubic-bezier(0.25, 1, 0.5, 1)";
-        flecha.style.transform = "rotate(-90deg) translateX(320px)";
+        // Dispara la flecha hacia arriba al corazón en vertical limpio
+        flecha.style.transform = "translateY(-300px)";
 
         setTimeout(() => {
+            audioTrack.play().catch(() => console.log("Audio activo"));
             corazonObjetivo.style.transform = "scale(0) rotate(-45deg)";
             
             setTimeout(() => {
                 pantallaJuego.classList.add('oculto');
                 pantallaTituloGrande.classList.remove('oculto');
                 
-                setTimeout(() => {
-                    pantallaTituloGrande.classList.add('oculto');
-                    pantallaResultado.classList.remove('oculto');
-                    
-                    dibujarArbolCorazones();
-                    lanzarConfeti();
-                }, 2500);
-
+                // Ejecuta el título palabra por palabra
+                animarTextoPalabraPorPalabra();
             }, 300);
         }, 100);
     });
+}
+
+// --- EFECTO PALABRA POR PALABRA (CORREGIDO) ---
+function animarTextoPalabraPorPalabra() {
+    const contenedor = document.getElementById('animacion-palabras');
+    const fraseCompleta = `Happy Birthday ${NOMBRE_DE_ELLA}`;
+    const palabras = fraseCompleta.split(' ');
+    contenedor.innerHTML = "";
+
+    palabras.forEach((palabra, index) => {
+        const span = document.createElement('span');
+        span.classList.add('palabra-animada');
+        span.textContent = palabra;
+        span.style.animationDelay = `${index * 0.4}s`; // Desfase temporal entre palabras
+        contenedor.appendChild(span);
+    });
+
+    // Duración total de la pantalla roja y pase al árbol final
+    setTimeout(() => {
+        pantallaTituloGrande.classList.add('oculto');
+        pantallaResultado.classList.remove('oculto');
+        
+        document.getElementById('titulo-cumple-mini').textContent = fraseCompleta;
+        dibujarArbolCorazones();
+        lanzarConfeti();
+    }, palabras.length * 500 + 1200);
 }
 
 // --- MÁQUINA DE ESCRIBIR ---
@@ -160,7 +175,7 @@ function iniciarEfectoEscritura() {
     setTimeout(escribir, 100);
 }
 
-// --- CREACIÓN DEL ÁRBOL RECTILÍNEO ORIGINAL ---
+// --- ÁRBOL DE CORAZÓN ESTABLE (CORREGIDO) ---
 function dibujarArbolCorazones() {
     const canvas = document.getElementById('arbol-canvas');
     const tronco = document.createElement('div');
@@ -175,41 +190,39 @@ function dibujarArbolCorazones() {
     canvas.appendChild(tronco);
 
     setTimeout(() => {
-        tronco.style.height = '160px';
+        tronco.style.height = '140px';
         
         setTimeout(() => {
-            for (let i = 0; i < 45; i++) {
+            for (let i = 0; i < 50; i++) {
                 crearHojaCorazon(canvas);
             }
-            setTimeout(iniciarEfectoEscritura, 1000);
+            setTimeout(iniciarEfectoEscritura, 1200);
         }, 1200);
     }, 150);
 }
 
 function crearHojaCorazon(contenedor) {
     const hoja = document.createElement('div');
-    hoja.style.position = 'absolute';
-    hoja.style.width = '10px';
-    hoja.style.height = '10px';
+    hoja.classList.add('hoja-arbol');
     
     const listaColores = coloresHojas[GENERO_ELEGIDO] || coloresHojas["mujer"];
     hoja.style.backgroundColor = listaColores[Math.floor(Math.random() * listaColores.length)];
-    hoja.style.borderRadius = '50% 50% 0 0';
-    hoja.style.transform = `rotate(${Math.random() * 360}deg) scale(0)`;
-    hoja.style.transition = 'transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     
     const angulo = Math.random() * Math.PI * 2;
-    const radio = Math.random() * 50; 
+    const radio = Math.random() * 45; 
     
-    const x = 50 + (Math.cos(angulo) * radio * 1.1);
-    const y = 100 - (Math.sin(angulo) * radio) - 60; 
+    // Ecuación matemática exacta para formar la copa de un corazón fijo
+    const x = 50 + (Math.cos(angulo) * radio * 1.2);
+    const y = 100 - (Math.sin(angulo) * radio) - 55; 
     
     hoja.style.left = `${x}%`;
     hoja.style.bottom = `${y}px`;
     
     contenedor.appendChild(hoja);
     
-    setTimeout(() => { hoja.style.transform = `rotate(${Math.random() * 45}deg) scale(1)`; }, Math.random() * 500);
+    setTimeout(() => { 
+        hoja.style.transform = `rotate(${Math.random() * 45}deg) scale(1)`; 
+    }, Math.random() * 600);
 }
 
 function lanzarConfeti() {
