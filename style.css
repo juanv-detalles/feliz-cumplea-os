@@ -61,7 +61,6 @@ body.tema-mujer { background-color: #fcebe6; }
     text-align: center;
     z-index: 100;
 }
-
 .tarjeta-formulario h2 { color: #d63447; margin-bottom: 15px; font-size: 1.4rem; }
 .grupo-input { text-align: left; margin-bottom: 12px; }
 .grupo-input label { display: block; font-size: 0.85rem; color: #7a6e6a; margin-bottom: 4px; font-weight: bold; }
@@ -70,55 +69,33 @@ body.tema-mujer { background-color: #fcebe6; }
 }
 .grupo-input textarea { height: 60px; resize: none; }
 .tarjeta-formulario button { width: 100%; padding: 12px; background-color: #d63447; color: #ffffff; border: none; border-radius: 6px; font-size: 1.1rem; cursor: pointer; font-weight: bold; margin-top: 5px; }
-
 #contenedor-enlace { margin-top: 15px; padding-top: 12px; border-top: 1px dashed #e0d0cc; }
 #input-enlace-resultado { background-color: #fcf1ee; border: 1px solid #d63447; text-align: center; color: #d63447; font-weight: bold; }
 
-/* --- PANTALLA 1: ARCO Y FLECHA HORIZONTAL (CORREGIDO) --- */
+/* --- ARCO HORIZONTAL CORREGIDO --- */
 .instruccion {
     font-style: italic;
     color: #b86262;
     font-size: 1.35rem;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 .tema-hombre .instruccion { color: #3b7ba8; }
 
 .contenedor-objetivo-horizontal {
-    width: 200px;
-    height: 100px;
+    width: 100px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 40px;
 }
 
-.corazon-flotante {
-    width: 70px;
-    height: 70px;
-    background-color: #ff4d6d;
-    position: relative;
-    transform: rotate(-45deg);
-    box-shadow: 0 0 25px rgba(255, 77, 109, 0.3);
-    animation: flotar 3s ease-in-out infinite;
-}
-.tema-hombre .corazon-flotante { background-color: #2a81ba; box-shadow: 0 0 25px rgba(42, 129, 186, 0.3); }
-
-.corazon-flotante::before, .corazon-flotante::after {
-    content: ''; width: 70px; height: 70px; background-color: #ff4d6d; border-radius: 50%; position: absolute;
-}
-.tema-hombre .corazon-flotante::before, .tema-hombre .corazon-flotante::after { background-color: #2a81ba; }
-.corazon-flotante::before { top: -35px; left: 0; }
-.corazon-flotante::after { left: 35px; top: 0; }
-
-@keyframes flotar {
-    0%, 100% { transform: translateY(0) rotate(-45deg); }
-    50% { transform: translateY(-15px) rotate(-45deg); }
-}
-
+/* El arco ahora está echado hacia la izquierda apuntando a la derecha */
 #contenedor-arco-horizontal {
     position: relative;
-    width: 140px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
+    transform: rotate(-90deg); /* Voltea el arco en horizontal */
+    margin-top: 40px;
     cursor: grab;
 }
 #contenedor-arco-horizontal:active { cursor: grabbing; }
@@ -126,43 +103,68 @@ body.tema-mujer { background-color: #fcebe6; }
 
 #flecha {
     position: absolute;
-    top: 10px;
-    left: 45px;
-    width: 3px;
-    height: 60px;
+    top: 50px;
+    left: 10px;
+    width: 65px;
+    height: 3px;
     background-color: #4a3b32;
-    transform-origin: center bottom;
+    transform-origin: left center;
 }
 #flecha::after {
     content: '';
     position: absolute;
-    left: -4px;
-    top: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 8px solid #4a3b32;
+    right: 0; top: -4px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid #4a3b32;
 }
 
-.pie-pagina { font-size: 0.85rem; letter-spacing: 2px; color: #7a6e6a; margin-top: 40px; }
+.pie-pagina { font-size: 0.85rem; letter-spacing: 2px; color: #7a6e6a; margin-top: 60px; }
 
-/* --- PANTALLA INTERMEDIA --- */
-.bloque-color-impacto { text-align: center; color: #ffffff; }
-.subtitulo-blanco { font-style: italic; font-size: 1.4rem; opacity: 0.95; }
-.texto-gigante { font-size: 3.5rem; font-weight: bold; margin-top: 10px; }
-.palabra-animada { display: inline-block; margin: 0 10px; opacity: 0; transform: scale(0.5); animation: aparecerPalabra 0.4s forwards; }
+/* --- CORRECCIÓN: TEXTO GRANDAZO PALABRA POR PALABRA --- */
+.bloque-color-impacto { text-align: center; color: #ffffff; width: 90%; }
+.subtitulo-blanco { font-style: italic; font-size: 1.6rem; opacity: 0.95; display: block; margin-bottom: 15px; }
+
+.texto-gigante-contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Letras inmensas como en el video original */
+.palabra-animada {
+    display: inline-block;
+    font-size: 5rem; /* Letra grandaza */
+    font-weight: 900;
+    margin: 10px 15px;
+    opacity: 0;
+    transform: scale(0.3);
+    animation: aparecerPalabra 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
 
 @keyframes aparecerPalabra {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* --- PANTALLA FINAL --- */
+/* --- ESCENA FINAL --- */
 #contenedor-confeti { position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; pointer-events: none; z-index: 1; }
 .encabezado-cumple { margin-top: 5vh; z-index: 10; text-align: center; }
 #titulo-cumple-mini { font-size: 1.6rem; color: #b86262; font-style: italic; }
 .tema-hombre #titulo-cumple-mini { color: #2a81ba; }
 
 .contenido-sorpresa { display: flex; width: 85%; max-width: 1050px; height: 60vh; justify-content: space-between; align-items: center; margin-top: 20px; z-index: 5; }
-.contenedor-planta { width: 45%; height: 100%; display: flex; justify-content: center; align-items: flex-end; }
+
+/* Cajas contenedoras balanceadas */
+.contenedor-planta { 
+    width: 45%; 
+    height: 100%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-end; 
+    position: relative;
+}
 #arbol-canvas { width: 100%; height: 100%; position: relative; }
 
 .contenedor-dedicatoria { width: 50%; padding: 20px; font-size: 1.2rem; line-height: 1.8; color: #4a3b32; border-left: 2px solid rgba(184, 98, 98, 0.2); white-space: pre-line; }
@@ -170,14 +172,14 @@ body.tema-mujer { background-color: #fcebe6; }
 #firma-att { margin-top: 20px; font-weight: bold; color: #d63447; font-size: 1.4rem; }
 .tema-hombre #firma-att { color: #1a6aa1; }
 
-/* HOJAS DEL ÁRBOL FIJAS (CORREGIDO) */
+/* --- CORRECCIÓN: HOJAS FIJAS CON LA ECUACIÓN DEL CORAZÓN --- */
 .hoja-arbol {
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50% 50% 0 0;
-    transform: rotate(-45deg) scale(0);
-    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(0);
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .confeti-pieza { position: absolute; width: 5px; height: 10px; opacity: 0.7; animation: caerConfeti 3s linear infinite; }
