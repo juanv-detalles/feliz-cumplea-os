@@ -82,22 +82,26 @@ function prepararTextosGenerales() {
     audioTrack.src = "musica.mp3";
 }
 
-// --- ARCO HORIZONTAL CON MECÁNICA EXACTA (CORREGIDO) ---
+// --- ARCO EN HORIZONTAL CON TENSIÓN FÍSICA CORRECTA ---
 function cargarControladoresArco() {
     contenedorArco.addEventListener('mousedown', (e) => {
         arrastrando = true;
-        startY = e.clientY;
+        startX = e.clientX;
         flecha.style.transition = "none";
     });
 
     window.addEventListener('mousemove', (e) => {
         if (!arrastrando) return;
-        let diffY = e.clientY - startY;
-        if (diffY > 0) {
-            if (diffY > LIMITE_TENSION) diffY = LIMITE_TENSION;
-            // Jala la cuerda hacia atrás visualmente en horizontal
-            flecha.style.transform = `translateY(${diffY}px)`;
-            cuerdaDinamica.setAttribute('d', `M 20,10 L 50,${10 + diffY * 0.8} L 80,10`);
+        let diffX = startY - e.clientY; // Inversión para jalar hacia atrás en el eje horizontal
+        let diffX_Arco = e.clientX - startY; // Para control en pantalla
+        
+        if (diffX_Arco < 0) {
+            let tension = Math.abs(diffX_Arco);
+            if (tension > LIMITE_TENSION) tension = LIMITE_TENSION;
+            
+            // Jala visualmente la flecha hacia la izquierda (atrás)
+            flecha.style.transform = `translateX(${-tension}px)`;
+            cuerdaDinamica.setAttribute('d', `M ${25 - tension * 0.7},50 L 25,15 M ${25 - tension * 0.7},50 L 25,85`);
         }
     });
 
@@ -105,10 +109,10 @@ function cargarControladoresArco() {
         if (!arrastrando) return;
         arrastrando = false;
         
-        cuerdaDinamica.setAttribute('d', "M 20,10 L 50,10 L 80,10");
+        cuerdaDinamica.setAttribute('d', "M 25,15 L 25,50 L 25,85");
         flecha.style.transition = "transform 0.12s cubic-bezier(0.25, 1, 0.5, 1)";
-        // Dispara la flecha de forma frontal hacia el corazón
-        flecha.style.transform = "translateY(-350px)";
+        // Dispara la flecha de frente en línea recta hacia la derecha al corazón objetivo
+        flecha.style.transform = "translateX(400px)";
 
         setTimeout(() => {
             audioTrack.play().catch(() => console.log("Audio activo"));
@@ -118,7 +122,6 @@ function cargarControladoresArco() {
                 pantallaJuego.classList.add('oculto');
                 pantallaTituloGrande.classList.remove('oculto');
                 
-                // Disparar animación de letras gigantes palabra por palabra
                 animarTextoPalabraPorPalabra();
             }, 300);
         }, 100);
@@ -135,7 +138,7 @@ function animarTextoPalabraPorPalabra() {
         const span = document.createElement('span');
         span.classList.add('palabra-animada');
         span.textContent = palabra;
-        span.style.animationDelay = `${index * 0.4}s`; // Separación temporal entre palabras
+        span.style.animationDelay = `${index * 0.4}s`;
         contenedor.appendChild(span);
     });
 
@@ -144,7 +147,6 @@ function animarTextoPalabraPorPalabra() {
         pantallaResultado.classList.remove('oculto');
         
         document.getElementById('titulo-cumple-mini').textContent = fraseCompleta;
-        // Iniciar el crecimiento ordenado del árbol
         dibujarArbolCorazones();
         lanzarConfeti();
     }, palabras.length * 400 + 1500);
@@ -173,7 +175,7 @@ function iniciarEfectoEscritura() {
     setTimeout(escribir, 100);
 }
 
-// --- CORRECCIÓN CRÍTICA: CRECIMIENTO VERTICAL Y COPA DE CORAZÓN FIJA ---
+// --- CREACIÓN DEL ÁRBOL EN CURVA DE CORAZÓN ORGANIZADA ---
 function dibujarArbolCorazones() {
     const canvas = document.getElementById('arbol-canvas');
     const tronco = document.createElement('div');
@@ -188,10 +190,10 @@ function dibujarArbolCorazones() {
     canvas.appendChild(tronco);
 
     setTimeout(() => {
-        tronco.style.height = '150px'; // El tronco crece verticalmente hacia arriba
+        tronco.style.height = '140px';
         
         setTimeout(() => {
-            // Brotan los 50 corazones en la parte superior formando la copa estricta
+            // Generación de la corona de la planta
             for (let i = 0; i < 50; i++) {
                 crearHojaCorazon(canvas);
             }
@@ -207,25 +209,25 @@ function crearHojaCorazon(contenedor) {
     const listaColores = coloresHojas[GENERO_ELEGIDO] || coloresHojas["mujer"];
     hoja.style.backgroundColor = listaColores[Math.floor(Math.random() * listaColores.length)];
     
-    // MATEMÁTICA COPA DE CORAZÓN (Cardioide matemática para agrupar las hojas arriba)
+    // ECUACIÓN MATEMÁTICA REAL DE LA COPA EN FORMA DE CORAZÓN SUPERIOR
     const t = Math.random() * Math.PI * 2;
-    const radioEscala = 3.5; // Escala perfecta para rellenar la copa
+    const factorEscala = 3.8; 
     
-    // Ecuación paramétrica de la forma de un corazón
+    // Forma del contorno del corazón del video de referencia
     const xOriginal = 16 * Math.pow(Math.sin(t), 3);
     const yOriginal = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
     
-    // Centrado absoluto sobre la punta del tronco superior
-    const xFinal = 50 + (xOriginal * radioEscala * 0.9);
-    const yFinal = 150 + (yOriginal * radioEscala) + 40; // Fijado estrictamente arriba del tronco
+    // Se anclan milimétricamente en la copa alta del tronco (Evitando que caigan abajo)
+    const xFinal = 50 + (xOriginal * factorEscala * 0.9);
+    const yFinal = 140 + (yOriginal * factorEscala) + 55; // Posicionamiento superior fijo
     
     hoja.style.left = `${xFinal}%`;
     hoja.style.bottom = `${yFinal}px`;
     
     contenedor.appendChild(hoja);
     
-    // Brotan escalonadamente y se quedan fijas armando el corazón
     setTimeout(() => { 
+        // Nacen escalonadamente y se bloquean arriba para dar la forma deseada
         hoja.style.transform = `rotate(${Math.random() * 360}deg) scale(1)`; 
     }, Math.random() * 800);
 }
