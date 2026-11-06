@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Especial Personalizable</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- PANTALLA DE CONFIGURACIÓN: PARA EL CREADOR (GENERA EL LINK) -->
+    <div id="pantalla-config" class="pantalla">
+        <div class="tarjeta-formulario">
+            <h2>Configurar Regalo Eterno</h2>
+            <div class="grupo-input">
+                <label for="input-destino">¿Para quién es la sorpresa?</label>
+                <input type="text" id="input-destino" placeholder="Ej. Estrella">
+            </div>
+            <div class="grupo-input">
+                <label for="select-genero">¿A qué género adaptar los colores?</label>
+                <select id="select-genero">
+                    <option value="mujer">Mujer (Tonos Rosa / Rojo)</option>
+                    <option value="hombre">Hombre (Tonos Azules / Celestes)</option>
+                </select>
+            </div>
+            <div class="grupo-input">
+                <label for="input-remitente">¿Quién lo envía?</label>
+                <input type="text" id="input-remitente" placeholder="Ej. Juan Valentin">
+            </div>
+            <div class="grupo-input">
+                <label for="input-dedicatoria">Dedicatoria (Opcional - Dejar en blanco para usar la del sistema)</label>
+                <textarea id="input-dedicatoria" placeholder="Escribe un mensaje personalizado aquí si lo deseas..."></textarea>
+            </div>
+            <button onclick="crearEnlaceCompartir()">Generar Enlace para Compartir 🚀</button>
+            <div id="contenedor-enlace" class="oculto">
+                <p>Copia este enlace y envíaselo a esa persona:</p>
+                <input type="text" id="input-enlace-resultado" readonly onclick="this.select()">
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA 1: EL JUEGO DEL ARCO Y LA FLECHA ORIGINAL -->
+    <div id="pantalla-juego" class="pantalla oculto">
+        <p class="instruccion">a little something, for you</p>
+        
+        <div class="contenedor-objetivo">
+            <div id="corazon-objetivo" class="corazon-flotante"></div>
+        </div>
+
+        <div id="contenedor-arco">
+            <svg id="arco-svg" viewBox="0 0 100 100">
+                <path d="M 10,20 Q 90,50 10,80" fill="none" stroke="#4a3b32" stroke-width="3"/>
+                <path id="cuerda-dinamica" d="M 10,20 L 10,50 L 10,80" fill="none" stroke="#4a3b32" stroke-width="1.5"/>
+            </svg>
+            <div id="flecha"></div>
+        </div>
+        
+        <p class="pie-pagina">PULL & RELEASE</p>
+    </div>
+
+    <!-- PANTALLA 2: PANTALLA IMPACTO ROJA/AZUL EXCLUSIVA -->
+    <div id="pantalla-titulo-grande" class="pantalla-impacto-color oculto">
+        <div class="bloque-color-impacto">
+            <span class="subtitulo-blanco">make a wish...</span>
+            <h1 class="texto-gigante">Happy Birthday <span class="nombre-gigante"></span></h1>
+        </div>
+    </div>
+
+    <!-- PANTALLA 3: EL ÁRBOL Y LA DEDICATORIA FINAL CORREGIDA -->
+    <div id="pantalla-resultado" class="pantalla oculto">
+        <div id="contenedor-confeti"></div>
+
+        <div class="encabezado-cumple">
+            <h2 id="titulo-cumple-mini">Happy Birthday <span id="nombre-amigo-mini"></span></h2>
+        </div>
+
+        <div class="contenido-sorpresa">
+            <div class="contenedor-planta">
+                <div id="arbol-canvas"></div>
+            </div>
+
+            <div class="contenedor-dedicatoria">
+                <p id="texto-dedicatoria"></p>
+                <p id="firma-att" class="oculto"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
