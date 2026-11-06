@@ -16,7 +16,7 @@ const elementoFirma = document.getElementById('firma-att');
 const audioTrack = document.getElementById('musica-fondo');
 
 let arrastrando = false;
-let startY = 0;
+let startX = 0;
 const LIMITE_TENSION = 45;
 
 const coloresHojas = {
@@ -82,7 +82,7 @@ function prepararTextosGenerales() {
     audioTrack.src = "musica.mp3";
 }
 
-// --- ARCO HORIZONTAL CON TENSIÓN REAL (CORREGIDO) ---
+// --- ARCO HORIZONTAL CON MECÁNICA EXACTA (CORREGIDO) ---
 function cargarControladoresArco() {
     contenedorArco.addEventListener('mousedown', (e) => {
         arrastrando = true;
@@ -95,7 +95,7 @@ function cargarControladoresArco() {
         let diffY = e.clientY - startY;
         if (diffY > 0) {
             if (diffY > LIMITE_TENSION) diffY = LIMITE_TENSION;
-            // Tensa la flecha hacia abajo de manera horizontal lógica
+            // Jala la cuerda hacia atrás visualmente en horizontal
             flecha.style.transform = `translateY(${diffY}px)`;
             cuerdaDinamica.setAttribute('d', `M 20,10 L 50,${10 + diffY * 0.8} L 80,10`);
         }
@@ -107,8 +107,8 @@ function cargarControladoresArco() {
         
         cuerdaDinamica.setAttribute('d', "M 20,10 L 50,10 L 80,10");
         flecha.style.transition = "transform 0.12s cubic-bezier(0.25, 1, 0.5, 1)";
-        // Dispara la flecha hacia arriba al corazón en vertical limpio
-        flecha.style.transform = "translateY(-300px)";
+        // Dispara la flecha de forma frontal hacia el corazón
+        flecha.style.transform = "translateY(-350px)";
 
         setTimeout(() => {
             audioTrack.play().catch(() => console.log("Audio activo"));
@@ -118,14 +118,13 @@ function cargarControladoresArco() {
                 pantallaJuego.classList.add('oculto');
                 pantallaTituloGrande.classList.remove('oculto');
                 
-                // Ejecuta el título palabra por palabra
+                // Disparar animación de letras gigantes palabra por palabra
                 animarTextoPalabraPorPalabra();
             }, 300);
         }, 100);
     });
 }
 
-// --- EFECTO PALABRA POR PALABRA (CORREGIDO) ---
 function animarTextoPalabraPorPalabra() {
     const contenedor = document.getElementById('animacion-palabras');
     const fraseCompleta = `Happy Birthday ${NOMBRE_DE_ELLA}`;
@@ -136,22 +135,21 @@ function animarTextoPalabraPorPalabra() {
         const span = document.createElement('span');
         span.classList.add('palabra-animada');
         span.textContent = palabra;
-        span.style.animationDelay = `${index * 0.4}s`; // Desfase temporal entre palabras
+        span.style.animationDelay = `${index * 0.4}s`; // Separación temporal entre palabras
         contenedor.appendChild(span);
     });
 
-    // Duración total de la pantalla roja y pase al árbol final
     setTimeout(() => {
         pantallaTituloGrande.classList.add('oculto');
         pantallaResultado.classList.remove('oculto');
         
         document.getElementById('titulo-cumple-mini').textContent = fraseCompleta;
+        // Iniciar el crecimiento ordenado del árbol
         dibujarArbolCorazones();
         lanzarConfeti();
-    }, palabras.length * 500 + 1200);
+    }, palabras.length * 400 + 1500);
 }
 
-// --- MÁQUINA DE ESCRIBIR ---
 function iniciarEfectoEscritura() {
     let i = 0;
     elementoTexto.innerHTML = "";
@@ -175,7 +173,7 @@ function iniciarEfectoEscritura() {
     setTimeout(escribir, 100);
 }
 
-// --- ÁRBOL DE CORAZÓN ESTABLE (CORREGIDO) ---
+// --- CORRECCIÓN CRÍTICA: CRECIMIENTO VERTICAL Y COPA DE CORAZÓN FIJA ---
 function dibujarArbolCorazones() {
     const canvas = document.getElementById('arbol-canvas');
     const tronco = document.createElement('div');
@@ -190,9 +188,10 @@ function dibujarArbolCorazones() {
     canvas.appendChild(tronco);
 
     setTimeout(() => {
-        tronco.style.height = '140px';
+        tronco.style.height = '150px'; // El tronco crece verticalmente hacia arriba
         
         setTimeout(() => {
+            // Brotan los 50 corazones en la parte superior formando la copa estricta
             for (let i = 0; i < 50; i++) {
                 crearHojaCorazon(canvas);
             }
@@ -208,21 +207,27 @@ function crearHojaCorazon(contenedor) {
     const listaColores = coloresHojas[GENERO_ELEGIDO] || coloresHojas["mujer"];
     hoja.style.backgroundColor = listaColores[Math.floor(Math.random() * listaColores.length)];
     
-    const angulo = Math.random() * Math.PI * 2;
-    const radio = Math.random() * 45; 
+    // MATEMÁTICA COPA DE CORAZÓN (Cardioide matemática para agrupar las hojas arriba)
+    const t = Math.random() * Math.PI * 2;
+    const radioEscala = 3.5; // Escala perfecta para rellenar la copa
     
-    // Ecuación matemática exacta para formar la copa de un corazón fijo
-    const x = 50 + (Math.cos(angulo) * radio * 1.2);
-    const y = 100 - (Math.sin(angulo) * radio) - 55; 
+    // Ecuación paramétrica de la forma de un corazón
+    const xOriginal = 16 * Math.pow(Math.sin(t), 3);
+    const yOriginal = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
     
-    hoja.style.left = `${x}%`;
-    hoja.style.bottom = `${y}px`;
+    // Centrado absoluto sobre la punta del tronco superior
+    const xFinal = 50 + (xOriginal * radioEscala * 0.9);
+    const yFinal = 150 + (yOriginal * radioEscala) + 40; // Fijado estrictamente arriba del tronco
+    
+    hoja.style.left = `${xFinal}%`;
+    hoja.style.bottom = `${yFinal}px`;
     
     contenedor.appendChild(hoja);
     
+    // Brotan escalonadamente y se quedan fijas armando el corazón
     setTimeout(() => { 
-        hoja.style.transform = `rotate(${Math.random() * 45}deg) scale(1)`; 
-    }, Math.random() * 600);
+        hoja.style.transform = `rotate(${Math.random() * 360}deg) scale(1)`; 
+    }, Math.random() * 800);
 }
 
 function lanzarConfeti() {
