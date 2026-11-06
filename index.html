@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA 1: EL JUEGO DEL ARCO Y LA FLECHA HORIZONTAL (CORREGIDO) -->
+    <!-- PANTALLA 1: EL JUEGO DEL ARCO EN HORIZONTAL (IGUAL AL VIDEO ORIGINAL) -->
     <div id="pantalla-juego" class="pantalla oculto">
         <p class="instruccion">a little something, for you</p>
         
@@ -52,6 +52,7 @@
 
         <div id="contenedor-arco-horizontal">
             <svg id="arco-svg" viewBox="0 0 100 100">
+                <!-- El arco ahora apunta correctamente hacia la derecha -->
                 <path d="M 20,10 Q 50,90 80,10" fill="none" stroke="#4a3b32" stroke-width="3"/>
                 <path id="cuerda-dinamica" d="M 20,10 L 50,10 L 80,10" fill="none" stroke="#4a3b32" stroke-width="1.5"/>
             </svg>
@@ -61,15 +62,16 @@
         <p class="pie-pagina">PULL & RELEASE</p>
     </div>
 
-    <!-- PANTALLA 2: PANTALLA IMPACTO ROJA/AZUL EXCLUSIVA -->
+    <!-- PANTALLA 2: PANTALLA IMPACTO CON LETRA GIGANTE (IGUAL AL VIDEO) -->
     <div id="pantalla-titulo-grande" class="pantalla-roja oculto">
-        <div class="bloque-rojo-impacto">
+        <div class="bloque-color-impacto">
             <span class="subtitulo-blanco">make a wish...</span>
-            <h1 class="texto-gigante" id="animacion-palabras"></h1>
+            <!-- Contenedor para el título que saldrá grandazo palabra por palabra -->
+            <div id="animacion-palabras" class="texto-gigante-contenedor"></div>
         </div>
     </div>
 
-    <!-- PANTALLA 3: EL ÁRBOL Y LA DEDICATORIA FINAL CORREGIDA -->
+    <!-- PANTALLA 3: EL ÁRBOL DE CORAZÓN EN EL CENTRO Y DEDICATORIA -->
     <div id="pantalla-resultado" class="pantalla oculto">
         <div id="contenedor-confeti"></div>
 
@@ -78,10 +80,12 @@
         </div>
 
         <div class="contenido-sorpresa">
+            <!-- Lado Izquierdo: El Canvas donde crecerá el árbol vertical -->
             <div class="contenedor-planta">
                 <div id="arbol-canvas"></div>
             </div>
 
+            <!-- Lado Derecho: Dedicatoria con efecto typewriter -->
             <div class="contenedor-dedicatoria">
                 <p id="texto-dedicatoria"></p>
                 <p id="firma-att" class="oculto"></p>
