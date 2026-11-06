@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle Especial Personalizable</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Agregamos un número de versión aleatorio (?v=2) para obligar al navegador a leer el CSS nuevo -->
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
@@ -42,7 +43,7 @@
         </div>
     </div>
 
-    <!-- PANTALLA 1: EL JUEGO DEL ARCO EN HORIZONTAL (IGUAL AL VIDEO ORIGINAL) -->
+    <!-- PANTALLA 1: ARCO Y FLECHA TOTALMENTE ACOMODADOS AL ESTILO ORIGINAL -->
     <div id="pantalla-juego" class="pantalla oculto">
         <p class="instruccion">a little something, for you</p>
         
@@ -50,28 +51,29 @@
             <div id="corazon-objetivo" class="corazon-flotante"></div>
         </div>
 
-        <div id="contenedor-arco-horizontal">
-            <svg id="arco-svg" viewBox="0 0 100 100">
-                <!-- El arco ahora apunta correctamente hacia la derecha -->
-                <path d="M 20,10 Q 50,90 80,10" fill="none" stroke="#4a3b32" stroke-width="3"/>
-                <path id="cuerda-dinamica" d="M 20,10 L 50,10 L 80,10" fill="none" stroke="#4a3b32" stroke-width="1.5"/>
-            </svg>
-            <div id="flecha"></div>
+        <!-- Se reestructuró el contenedor del arco para que esté acostado físicamente -->
+        <div id="area-arco-horizontal">
+            <div id="contenedor-arco-horizontal">
+                <svg id="arco-svg" viewBox="0 0 100 100">
+                    <path d="M 25,15 Q 85,50 25,85" fill="none" stroke="#4a3b32" stroke-width="3.5"/>
+                    <path id="cuerda-dinamica" d="M 25,15 L 25,50 L 25,85" fill="none" stroke="#4a3b32" stroke-width="1.5"/>
+                </svg>
+                <div id="flecha"></div>
+            </div>
         </div>
         
         <p class="pie-pagina">PULL & RELEASE</p>
     </div>
 
-    <!-- PANTALLA 2: PANTALLA IMPACTO CON LETRA GIGANTE (IGUAL AL VIDEO) -->
+    <!-- PANTALLA 2: TITULO GIGANTE PALABRA POR PALABRA -->
     <div id="pantalla-titulo-grande" class="pantalla-roja oculto">
         <div class="bloque-color-impacto">
             <span class="subtitulo-blanco">make a wish...</span>
-            <!-- Contenedor para el título que saldrá grandazo palabra por palabra -->
             <div id="animacion-palabras" class="texto-gigante-contenedor"></div>
         </div>
     </div>
 
-    <!-- PANTALLA 3: EL ÁRBOL DE CORAZÓN EN EL CENTRO Y DEDICATORIA -->
+    <!-- PANTALLA 3: PLANTA DE CORAZÓN FIJA Y DEDICATORIA CENTRADA -->
     <div id="pantalla-resultado" class="pantalla oculto">
         <div id="contenedor-confeti"></div>
 
@@ -80,12 +82,10 @@
         </div>
 
         <div class="contenido-sorpresa">
-            <!-- Lado Izquierdo: El Canvas donde crecerá el árbol vertical -->
             <div class="contenedor-planta">
                 <div id="arbol-canvas"></div>
             </div>
 
-            <!-- Lado Derecho: Dedicatoria con efecto typewriter -->
             <div class="contenedor-dedicatoria">
                 <p id="texto-dedicatoria"></p>
                 <p id="firma-att" class="oculto"></p>
@@ -93,6 +93,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Agregamos la misma versión de cache (?v=2) al script -->
+    <script src="script.js?v=2"></script>
 </body>
 </html>
